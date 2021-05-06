@@ -15,6 +15,7 @@ namespace SeleniumTests
     class UpdateProfileData
     {
         private IWebDriver _webDriver;
+        private string password;
 
         [SetUp]
         public void Setup()
