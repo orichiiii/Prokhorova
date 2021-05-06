@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using SeleniumTests;
 using System;
 using System.Threading;
 using WebDriverManager;
@@ -12,6 +13,12 @@ namespace TestProject
     class AutorizationTests
     {
         private IWebDriver _webDriver;
+        private Random random;
+        private int randomPhoneFirst;
+        private int randomPhoneSecond;
+        private int randomPh;
+        private string email;
+        private string phone;
 
         [SetUp]
         public void Setup()
@@ -21,14 +28,23 @@ namespace TestProject
             _webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(7);
             _webDriver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(60);
             _webDriver.Navigate().GoToUrl("https://newbookmodels.com/auth/signin");
+
+            var authorization = new AuthorizationPage(_webDriver);
+
+            authorization.GoToRegistrationPage()
+                .SetFirstName("Carolina")
+                .SetLastName("Doul")
+                .SetEmail($"{email}@gmail.com")
+                .SetPassword("Aa@12345678")
+                .SetPasswordConfirm("Aa@12345678")
+                .SetPhoneNumber($"{phone}")
+                .ClickNextButton();
         }
 
         [Test]
         public void AuthorizationWithValidData()
         {
-            _webDriver.FindElement(By.CssSelector("[name = email]")).SendKeys("cassssb0@gmail.com");
-            _webDriver.FindElement(By.CssSelector("[name = password]")).SendKeys("Oly12345678$");
-            _webDriver.FindElement(By.CssSelector("[class^=SignInForm__submitButton]")).Click();
+            
 
             Thread.Sleep(20000);
             var actual = _webDriver.Url;
