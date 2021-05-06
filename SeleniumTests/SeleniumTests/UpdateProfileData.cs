@@ -123,7 +123,6 @@ namespace SeleniumTests
             Assert.That(existsElement($"//*[text()='cassssb{email}@gmail.com']"));
         }
 
-
         private bool existsElement(String id)
         {
             try
