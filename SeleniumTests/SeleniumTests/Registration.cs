@@ -41,7 +41,7 @@ namespace LoginTests
 
             _webDriver.FindElement(By.CssSelector("[name='first_name']")).SendKeys("Marina");
             _webDriver.FindElement(By.CssSelector("[name = last_name]")).SendKeys("Tropinkina");
-            _webDriver.FindElement(By.CssSelector("[name = email]")).SendKeys($"uijjth{DateTime.Now}@emlpro.com");
+            _webDriver.FindElement(By.CssSelector("[name = email]")).SendKeys($"uijjth{DateTime.Now.ToString("dd.yyyy.HH.mm.ss")}@emlpro.com");
             _webDriver.FindElement(By.CssSelector("[name = password]")).SendKeys("Aa@12345678");
             _webDriver.FindElement(By.CssSelector("[name = password_confirm]")).SendKeys("Aa@12345678");
             _webDriver.FindElement(By.CssSelector("[name = phone_number]")).SendKeys($"{randomPhoneFirst}{randomPhoneSecond}{randomPh}");
@@ -60,7 +60,7 @@ namespace LoginTests
 
             _webDriver.FindElement(By.CssSelector("[name='first_name']")).SendKeys("Marina");
             _webDriver.FindElement(By.CssSelector("[name = last_name]")).SendKeys("Tropinkina");
-            _webDriver.FindElement(By.CssSelector("[name = email]")).SendKeys($"uijjth{DateTime.Now}@emlpro.com");
+            _webDriver.FindElement(By.CssSelector("[name = email]")).SendKeys($"uijjth{DateTime.Now.ToString("dd.yyyy.HH.mm.ss")}@emlpro.com");
             _webDriver.FindElement(By.CssSelector("[name = password]")).SendKeys("Aa@12345678");
             _webDriver.FindElement(By.CssSelector("[name = password_confirm]")).SendKeys("Aa@12345678");
             _webDriver.FindElement(By.CssSelector("[name = phone_number]")).SendKeys($"{randomPhoneFirst}{randomPhoneSecond}{randomPh}");
