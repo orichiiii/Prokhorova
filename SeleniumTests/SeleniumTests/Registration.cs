@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using SeleniumTests;
 using System;
 using System.Threading;
 using WebDriverManager;
@@ -11,66 +12,40 @@ namespace LoginTests
 {
     public class RegistrationTests
     {
-        private IWebDriver _webDriver;
-        private Random random;
-        private int randomPhoneFirst;
-        private int randomPhoneSecond;
-        private int randomPh;
-
+        private WebDriverHelper _webDriverHelper;
 
         [SetUp]
         public void Setup()
         {
-            new DriverManager().SetUpDriver(new ChromeConfig(), VersionResolveStrategy.MatchingBrowser);
-            _webDriver = new ChromeDriver();
-            _webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(7);
-            _webDriver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(60);
-            _webDriver.Navigate().GoToUrl("https://newbookmodels.com/");
-
-            random = new Random();
-
-            randomPhoneFirst = random.Next(100, 999);
-            randomPhoneSecond = random.Next(100, 999);
-            randomPh = random.Next(1000, 9999);
+            _webDriverHelper = new WebDriverHelper();
         }
 
         [Test]
-        public void Test1()
+        public void Registration()
         {
-            _webDriver.Navigate().GoToUrl("https://newbookmodels.com/join");
+            var phone =  GenerateParameters.GetPhone();
+            var email = GenerateParameters.GetEmail();
+            var webDriver = _webDriverHelper.GetWebDriver();
+            webDriver.Navigate().GoToUrl(Constant.loginLink);
 
-            _webDriver.FindElement(By.CssSelector("[name='first_name']")).SendKeys("Marina");
-            _webDriver.FindElement(By.CssSelector("[name = last_name]")).SendKeys("Tropinkina");
-            _webDriver.FindElement(By.CssSelector("[name = email]")).SendKeys($"uijjth{DateTime.Now.ToString("dd.yyyy.HH.mm.ss")}@emlpro.com");
-            _webDriver.FindElement(By.CssSelector("[name = password]")).SendKeys("Aa@12345678");
-            _webDriver.FindElement(By.CssSelector("[name = password_confirm]")).SendKeys("Aa@12345678");
-            _webDriver.FindElement(By.CssSelector("[name = phone_number]")).SendKeys($"{randomPhoneFirst}{randomPhoneSecond}{randomPh}");
-            _webDriver.FindElement(By.CssSelector("[class^=SignupForm__submitButton]")).Click();
+            webDriver.FindElement(By.CssSelector("[name='first_name']")).SendKeys(Constant.name);
+            webDriver.FindElement(By.CssSelector("[name = last_name]")).SendKeys(Constant.lastName);
+            webDriver.FindElement(By.CssSelector("[name = email]")).SendKeys(email);
+            webDriver.FindElement(By.CssSelector("[name = password]")).SendKeys(Constant.password);
+            webDriver.FindElement(By.CssSelector("[name = password_confirm]")).SendKeys(Constant.password);
+            webDriver.FindElement(By.CssSelector("[name = phone_number]")).SendKeys(phone);
+            webDriver.FindElement(By.CssSelector("[class^=SignupForm__submitButton]")).Click();
 
-            Thread.Sleep(20000);
-            var actual = _webDriver.Url;
+            //заменить на ожидание пока появится элемент
+            Thread.Sleep(5000);
 
-            Assert.That(actual == "https://newbookmodels.com/join/company");
+            Assert.AreEqual(Constant.companyLink, webDriver.Url);
         }
 
-        [Test]
-        public void Test2()
+        [TearDown]
+        public void Quit()
         {
-            _webDriver.Navigate().GoToUrl("https://newbookmodels.com/join");
-
-            _webDriver.FindElement(By.CssSelector("[name='first_name']")).SendKeys("Marina");
-            _webDriver.FindElement(By.CssSelector("[name = last_name]")).SendKeys("Tropinkina");
-            _webDriver.FindElement(By.CssSelector("[name = email]")).SendKeys($"uijjth{DateTime.Now.ToString("dd.yyyy.HH.mm.ss")}@emlpro.com");
-            _webDriver.FindElement(By.CssSelector("[name = password]")).SendKeys("Aa@12345678");
-            _webDriver.FindElement(By.CssSelector("[name = password_confirm]")).SendKeys("Aa@12345678");
-            _webDriver.FindElement(By.CssSelector("[name = phone_number]")).SendKeys($"{randomPhoneFirst}{randomPhoneSecond}{randomPh}");
-            _webDriver.FindElement(By.CssSelector("[class^=SignupForm__submitButton]")).Click();
-
-            Thread.Sleep(20000);
-            var actual = _webDriver.Url;
-
-            Assert.That(actual == "https://newbookmodels.com/join/company");
+            _webDriverHelper.CloseDriver(); 
         }
-
     }
 }

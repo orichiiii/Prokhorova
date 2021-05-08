@@ -12,6 +12,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
     <PackageReference Include="Selenium.Support" Version="3.141.0" />
     <PackageReference Include="Selenium.WebDriver" Version="3.141.0" />
+    <PackageReference Include="ServiceStack.Common" Version="5.11.0" />
     <PackageReference Include="WebDriverManager" Version="2.11.1" />
   </ItemGroup>
 

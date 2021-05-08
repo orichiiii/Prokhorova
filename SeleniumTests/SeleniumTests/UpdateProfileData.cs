@@ -15,56 +15,65 @@ namespace SeleniumTests
     class UpdateProfileData
     {
         private IWebDriver _webDriver;
-        private string password;
+        private ConstMethods _constMethods;
+        private string _email;
 
         [SetUp]
         public void Setup()
         {
-            new DriverManager().SetUpDriver(new ChromeConfig(), VersionResolveStrategy.MatchingBrowser);
-            _webDriver = new ChromeDriver();
-            _webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(7);
-            _webDriver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(60);
+            _webDriver = new WebDriverHelper().GetWebDriver();
+            _constMethods = new ConstMethods(_webDriver);
 
-            _webDriver.Navigate().GoToUrl("https://newbookmodels.com/auth/signin");
+            var phone = GenerateParameters.GetPhone();
+            _email = GenerateParameters.GetEmail();
 
-            _webDriver.FindElement(By.CssSelector("[name = email]")).SendKeys("cassssb0@gmail.com");
-            _webDriver.FindElement(By.CssSelector("[name = password]")).SendKeys("Oly12345678$");
-            _webDriver.FindElement(By.CssSelector("[class^=SignInForm__submitButton]")).Click();
-            _webDriver.FindElement(By.CssSelector("[class^= AvatarClient__avatar]")).Click();
-            //_webDriver.Navigate().GoToUrl("https://newbookmodels.com/account-settings/account-info/edit");
+            _webDriver.Navigate().GoToUrl("https://newbookmodels.com/join");
+
+            _webDriver.FindElement(By.CssSelector("[name='first_name']")).SendKeys("Marina");
+            _webDriver.FindElement(By.CssSelector("[name = last_name]")).SendKeys("Tropinkina");
+            _webDriver.FindElement(By.CssSelector("[name = email]")).SendKeys(_email);
+            _webDriver.FindElement(By.CssSelector("[name = password]")).SendKeys("Aa@12345678");
+            _webDriver.FindElement(By.CssSelector("[name = password_confirm]")).SendKeys("Aa@12345678");
+            _webDriver.FindElement(By.CssSelector("[name = phone_number]")).SendKeys(phone);
+            _webDriver.FindElement(By.CssSelector("[class^=SignupForm__submitButton]")).Click();
+            Thread.Sleep(3000);
+            _webDriver.Navigate().GoToUrl("https://newbookmodels.com/account-settings/account-info/edit");
         }
 
         [Test]
         public void UpdateGeneralInformation()
         {
             _webDriver.FindElement(By.CssSelector("[class^= edit-switcher__icon_type_edit]")).Click();
-            _webDriver.FindElement(By.CssSelector("[class= input__self input__self_type_text - underline ng - untouched ng - pristine ng - valid]")).SendKeys("da");
-            Thread.Sleep(2000);
-            _webDriver.FindElement(By.CssSelector("[class=pac-matched]")).Click();
+            var location = _webDriver.FindElement(By.CssSelector("[class='input__self input__self_type_text-underline ng-untouched ng-pristine ng-valid pac-target-input']"));
+            location.SendKeys("hhh");
+            Thread.Sleep(500);
+            location.SendKeys(Keys.Down);
+            location.SendKeys(Keys.Enter);           
+            _webDriver.FindElement(By.CssSelector("input[placeholder='Enter Industry']")).SendKeys("fashion");
+            Thread.Sleep(500);
+            _webDriver.FindElement(By.CssSelector("div:nth-child(2) > div > common-button-deprecated > button")).Click();
 
-            Thread.Sleep(20000);
-            var actual = _webDriver.Url;//_webDriver.FindElement(By.CssSelector("[class^='paragraph_type_gray']));
+            var industryText = _webDriver.FindElement(By.CssSelector("nb-paragraph:nth-child(7)>div")).Text;
+            var locationText = _webDriver.FindElement(By.CssSelector("nb-paragraph:nth-child(5)>div")).Text;
 
-            Assert.That(actual == "https://newbookmodels.com/join/company");
+            Assert.AreEqual("fashion", industryText);
+            Assert.AreEqual("Half Hollow Hills Central School District, NY, USA", locationText);
         }
 
         [Test]
-        public string UpdatePassword()
+        public void UpdatePassword()
         {
-            string password = "";
-            var email = DateTime.Now.ToString("dd.yyyy.HH.mm.ss");
-            var emailField = _webDriver.FindElement(By.CssSelector("body > nb-app > ng-component > nb-internal-layout > common-layout > section > div > ng-component > nb-account-info-edit > common-border > div:nth-child(5) > div > nb-account-info-password > form > div:nth-child(1) > div"));
-            emailField.FindElement(By.CssSelector("[class^= edit-switcher__icon_type_edit]")).Click();
+            _webDriver.FindElement(By.XPath("//div[3]/div[1]/nb-account-info-password[1]/form[1]/div[1]/div[1]/nb-edit-switcher[1]/div[1]/div[1]")).Click();
             var elements =_webDriver.FindElements(By.CssSelector("[type = password]"));
-            elements[0].SendKeys("Oly12345678$");
+            elements[0].SendKeys("Aa@12345678");
             elements[1].SendKeys("Oly12345678$$");
             elements[2].SendKeys("Oly12345678$$");
             _webDriver.FindElement(By.CssSelector("[type = submit]")).Click();
-            _webDriver.FindElement(By.CssSelector("[class^= HamburgerButton__container--3QXFq]")).Click();
-            _webDriver.FindElements(By.CssSelector("[type = button]"));
+            _webDriver.FindElement(By.CssSelector("[class='link link_type_logout link_active']")).Click();
 
-            _webDriver.FindElement(By.CssSelector("[name = email]")).SendKeys("cassssb0@gmail.com");
-            _webDriver.FindElement(By.CssSelector("[name = password]")).SendKeys("Oly12345678$");
+            Thread.Sleep(4000);
+            _webDriver.FindElement(By.CssSelector("input[type = email]")).SendKeys(_email);
+            _webDriver.FindElement(By.CssSelector("input[type = password]")).SendKeys("Oly12345678$");
             _webDriver.FindElement(By.CssSelector("[class^=SignInForm__submitButton]")).Click();
 
             Thread.Sleep(20000);
@@ -72,25 +81,23 @@ namespace SeleniumTests
 
             Thread.Sleep(4000);
 
-            Assert.That(actual == "https://newbookmodels.com/join/company?goBackUrl=%2Fexplore");
-
-            return password;
+            Assert.That(actual == "https://newbookmodels.com/account-settings/account-info/edit");
         }
 
         [Test]
         public void UpdateEmail()
         {
-            var email = DateTime.Now.ToString("dd.yyyy.HH.mm.ss");
+            _email = DateTime.Now.ToString("dd.yyyy.HH.mm.ss");
             var emailField =_webDriver.FindElement(By.CssSelector("body > nb-app > ng-component > nb-internal-layout > common-layout > section > div > ng-component > nb-account-info-edit > common-border > div:nth-child(3) > div > nb-account-info-email-address > form > div:nth-child(1) > div"));
             emailField.FindElement(By.CssSelector("[class^= edit-switcher__icon_type_edit]")).Click();
-            _webDriver.FindElement(By.CssSelector("[type = password]")).SendKeys("Oly12345678$");
-            _webDriver.FindElement(By.CssSelector("[type = text]")).SendKeys($"cassssb{email}@gmail.com");
+            _webDriver.FindElement(By.CssSelector("[type = password]")).SendKeys("Aa@12345678");
+            _webDriver.FindElement(By.CssSelector("[type = text]")).SendKeys(_email);
             Thread.Sleep(2000);
             _webDriver.FindElement(By.CssSelector("[type = submit]")).Click();
 
             Thread.Sleep(4000);
 
-            Assert.That(existsElement($"//*[text()='cassssb{email}@gmail.com']"));
+            //Assert.That(_constMethods.existsElement($"//*[text()='{_email}']"));
         }
 
         [Test]
@@ -98,28 +105,33 @@ namespace SeleniumTests
         {
             var emailField = _webDriver.FindElement(By.CssSelector("body > nb-app > ng-component > nb-internal-layout > common-layout > section > div > ng-component > nb-account-info-edit > common-border > div:nth-child(9) > div > nb-account-info-phone > div:nth-child(1) > div"));
             emailField.FindElement(By.CssSelector("[class^= edit-switcher__icon_type_edit]")).Click();
-            _webDriver.FindElement(By.CssSelector("[type = password]")).SendKeys("Oly12345678$");
-            _webDriver.FindElement(By.CssSelector("[type = text]")).SendKeys("");
-            Thread.Sleep(2000);
+            _webDriver.FindElement(By.CssSelector("[type = password]")).SendKeys("Aa@12345678");
+            _webDriver.FindElement(By.CssSelector("[type = text]")).SendKeys("1111111111");
             _webDriver.FindElement(By.CssSelector("[type = submit]")).Click();
 
             Thread.Sleep(4000);
 
-            Assert.That(existsElement($"//*[text()='cassssb{email}@gmail.com']"));
+            //Assert.That(_constMethods.existsElement($"//*[text()='1111111111']"));
         }
 
-
-        private bool existsElement(String id)
+        [Test]
+        public void AddCard()
         {
-            try
-            {
-                _webDriver.FindElement(By.XPath(id));
-            }
-            catch (NoSuchElementException)
-            {
-                return false;
-            }
-            return true;
+            _webDriver.FindElement(By.CssSelector("input[placeholder ='Full name']")).SendKeys("Marina Tropinkina");
+            _webDriver.FindElement(By.CssSelector("[class^= 'InputElement']")).SendKeys("4683 9759 3739 473");
+            _webDriver.FindElement(By.CssSelector("[name = exp-date]")).SendKeys("9999");
+            _webDriver.FindElement(By.CssSelector("[name = cvc]")).SendKeys("999");
+            _webDriver.FindElement(By.CssSelector("[type = submit]")).Click();
+
+            Thread.Sleep(1000);
+
+            //Assert.That(_constMethods.existsElement($"//*[text()='Update card info unexpected error']"));
+        }
+
+        [TearDown]
+        public void Quit()
+        {
+            _webDriver.Quit();
         }
     }
 }
