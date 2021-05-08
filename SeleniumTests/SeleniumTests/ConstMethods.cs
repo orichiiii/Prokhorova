@@ -9,7 +9,7 @@ namespace SeleniumTests
 {
     public class ConstMethods
     {
-        private readonly IWebDriver _webDriver;
+        private IWebDriver _webDriver;
 
         public ConstMethods(IWebDriver webDriver)
         {
@@ -40,6 +40,19 @@ namespace SeleniumTests
                 return false;
             }
             return true;
+        }
+
+        public void RegistrationProcess(string phone, string email)
+        {
+            _webDriver.Navigate().GoToUrl(Constant.loginLink);
+
+            _webDriver.FindElement(By.CssSelector("[name='first_name']")).SendKeys(Constant.name);
+            _webDriver.FindElement(By.CssSelector("[name = last_name]")).SendKeys(Constant.lastName);
+            _webDriver.FindElement(By.CssSelector("[name = email]")).SendKeys(email);
+            _webDriver.FindElement(By.CssSelector("[name = password]")).SendKeys(Constant.password);
+            _webDriver.FindElement(By.CssSelector("[name = password_confirm]")).SendKeys(Constant.password);
+            _webDriver.FindElement(By.CssSelector("[name = phone_number]")).SendKeys(phone);
+            _webDriver.FindElement(By.CssSelector("[class^=SignupForm__submitButton]")).Click();
         }
     }
 }

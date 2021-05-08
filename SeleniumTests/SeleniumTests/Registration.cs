@@ -10,36 +10,31 @@ using WebDriverManager.Helpers;
 
 namespace LoginTests
 {
-    public class RegistrationTests
+    public class Registration
     {
         private WebDriverHelper _webDriverHelper;
+        private IWebDriver _webDriver;
+        private ConstMethods _constMethods;
 
         [SetUp]
         public void Setup()
         {
             _webDriverHelper = new WebDriverHelper();
+            _webDriver = _webDriverHelper.GetWebDriver();
+            _constMethods = new ConstMethods(_webDriver);
         }
 
         [Test]
-        public void Registration()
+        public void PositiveRegistration()
         {
-            var phone =  GenerateParameters.GetPhone();
+            var phone = GenerateParameters.GetPhone();
             var email = GenerateParameters.GetEmail();
-            var webDriver = _webDriverHelper.GetWebDriver();
-            webDriver.Navigate().GoToUrl(Constant.loginLink);
-
-            webDriver.FindElement(By.CssSelector("[name='first_name']")).SendKeys(Constant.name);
-            webDriver.FindElement(By.CssSelector("[name = last_name]")).SendKeys(Constant.lastName);
-            webDriver.FindElement(By.CssSelector("[name = email]")).SendKeys(email);
-            webDriver.FindElement(By.CssSelector("[name = password]")).SendKeys(Constant.password);
-            webDriver.FindElement(By.CssSelector("[name = password_confirm]")).SendKeys(Constant.password);
-            webDriver.FindElement(By.CssSelector("[name = phone_number]")).SendKeys(phone);
-            webDriver.FindElement(By.CssSelector("[class^=SignupForm__submitButton]")).Click();
+            _constMethods.RegistrationProcess(phone, email);
 
             //заменить на ожидание пока появится элемент
             Thread.Sleep(5000);
 
-            Assert.AreEqual(Constant.companyLink, webDriver.Url);
+            Assert.AreEqual(Constant.companyLink, _webDriver.Url);
         }
 
         [TearDown]
