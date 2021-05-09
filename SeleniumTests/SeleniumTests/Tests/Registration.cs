@@ -8,7 +8,7 @@ using WebDriverManager;
 using WebDriverManager.DriverConfigs.Impl;
 using WebDriverManager.Helpers;
 
-namespace LoginTests
+namespace SeleniumTests
 {
     public class Registration
     {
@@ -29,12 +29,25 @@ namespace LoginTests
         {
             var phone = GenerateParameters.GetPhone();
             var email = GenerateParameters.GetEmail();
-            _constMethods.RegistrationProcess(phone, email);
+            _constMethods.RegistrationProcess(phone, email, Constant.password);
 
             //заменить на ожидание пока появится элемент
             Thread.Sleep(5000);
 
             Assert.AreEqual(Constant.companyLink, _webDriver.Url);
+        }
+
+        [Test]
+        [TestCase("22222", "fhj@", "1234567")]
+        public void RegistrationvithInvalidData(string invalidEmail, string invalidPhone, string invalidPassword)
+        {
+            _constMethods.RegistrationProcess(invalidPhone, invalidEmail, invalidPassword);
+            Thread.Sleep(2000);
+            var errors = _webDriver.FindElements(By.CssSelector("div.FormErrorText__error---nzyq > div"));
+
+            Assert.AreEqual("Invalid Email", errors[0].Text);
+            Assert.AreEqual("Invalid password format", errors[1].Text);
+            Assert.AreEqual("Invalid phone format", errors[2].Text);
         }
 
         [TearDown]

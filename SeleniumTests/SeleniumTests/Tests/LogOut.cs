@@ -25,20 +25,18 @@ namespace SeleniumTests
 
             _webDriverHelper = new WebDriverHelper();
             _webDriver = _webDriverHelper.GetWebDriver();
+            _webDriverWait = new WebDriverWait(_webDriver, TimeSpan.FromSeconds(6));
             _constMethods = new ConstMethods(_webDriver);
-            _constMethods.RegistrationProcess(_phone, _email);
-
-            _webDriverWait = new WebDriverWait(_webDriver, TimeSpan.FromMilliseconds(20000));
+            _constMethods.RegistrationProcess(_phone, _email, Constant.password);
         }
 
         [Test]
         public void LogOutt()
         {
-            _webDriverWait.Until((ExpectedConditions.ElementIsVisible(By.CssSelector("[class='SignupAvatar__avatar--IxJnV']"))));
+            Thread.Sleep(3000);
             _webDriver.Navigate().GoToUrl(Constant.updateLink);
-            _webDriverWait.Until((ExpectedConditions.ElementIsVisible(By.CssSelector("[class^='layout-fluid']"))));
+            Thread.Sleep(2000);
             _webDriver.FindElement(By.CssSelector("[class='link link_type_logout link_active']")).Click();
-
             _webDriverWait.Until((ExpectedConditions.ElementIsVisible(By.CssSelector("[class='FormCard__header--36gOi']"))));
             var actualURL = _webDriver.Url;
 

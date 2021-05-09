@@ -8,7 +8,7 @@ using WebDriverManager;
 using WebDriverManager.DriverConfigs.Impl;
 using WebDriverManager.Helpers;
 
-namespace TestProject
+namespace SeleniumTests
 {
     class Autorization
     {
@@ -27,7 +27,7 @@ namespace TestProject
             _webDriverHelper = new WebDriverHelper();
             _webDriver = _webDriverHelper.GetWebDriver();
             _constMethods = new ConstMethods(_webDriver);
-            _constMethods.RegistrationProcess(_phone, _email);
+            _constMethods.RegistrationProcess(_phone, _email, Constant.password);
 
             Thread.Sleep(3000);
             _webDriver.Navigate().GoToUrl("https://newbookmodels.com/account-settings/account-info/edit");

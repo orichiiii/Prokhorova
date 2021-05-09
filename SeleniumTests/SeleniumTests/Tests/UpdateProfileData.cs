@@ -31,10 +31,9 @@ namespace SeleniumTests
             _webDriverHelper = new WebDriverHelper();
             _webDriver = _webDriverHelper.GetWebDriver();
             _constMethods = new ConstMethods(_webDriver);
-            _constMethods.RegistrationProcess(_phone, _email);
+            _constMethods.RegistrationProcess(_phone, _email, Constant.password);
 
             Thread.Sleep(3000);
-
             _webDriver.Navigate().GoToUrl(Constant.updateLink);
         }
 
@@ -68,19 +67,20 @@ namespace SeleniumTests
         }
 
         [Test]
-        public void UpdatePassword()
+        [TestCase("Oly12345678$$")]
+        public void UpdatePassword(string password)
         {
             _webDriver.FindElement(By.XPath("//div[3]/div[1]/nb-account-info-password[1]/form[1]/div[1]/div[1]/nb-edit-switcher[1]/div[1]/div[1]")).Click();
             var elements =_webDriver.FindElements(By.CssSelector("[type = password]"));
             elements[0].SendKeys(Constant.password);
-            elements[1].SendKeys("Oly12345678$$");
-            elements[2].SendKeys("Oly12345678$$");
+            elements[1].SendKeys(password);
+            elements[2].SendKeys(password);
             _webDriver.FindElement(By.CssSelector("[type = submit]")).Click();
-            _webDriver.FindElement(By.CssSelector("[class='link link_type_logout link_active']")).Click();
-
-            Thread.Sleep(9000);
+            Thread.Sleep(3000);
+            _webDriver.FindElement(By.CssSelector("div.row.mt-4>div>nb-link>div")).Click();
+            Thread.Sleep(3000);
             _webDriver.FindElement(By.CssSelector("[type=email]")).SendKeys(_email);
-            _webDriver.FindElement(By.CssSelector("input[name = password]")).SendKeys("Oly12345678$$");
+            _webDriver.FindElement(By.CssSelector("input[name = password]")).SendKeys(password);
             _webDriver.FindElement(By.CssSelector("[class^=SignInForm__submitButton]")).Click();
 
             Thread.Sleep(3000);
@@ -123,16 +123,27 @@ namespace SeleniumTests
         public void AddCard()
         {
             _webDriver.FindElement(By.CssSelector("input[placeholder ='Full name']")).SendKeys("Marina Tropinkina");
-            _webDriver.FindElement(By.CssSelector("div.CardNumberField-input-wrapper>span>input")).SendKeys("4683 9759 3739 473");
+            _webDriver.FindElement(By.CssSelector("div.CardNumberField-input-wrapper input")).SendKeys("468397593739473");
             _webDriver.FindElement(By.CssSelector("[name = exp-date]")).SendKeys("9999");
             _webDriver.FindElement(By.CssSelector("[name = cvc]")).SendKeys("999");
             _webDriver.FindElement(By.CssSelector("[type = submit]")).Click();
 
             var expectedException = _webDriver.FindElement(By.CssSelector("[class='header-notification__text ml-1']")).Text;
-
             Thread.Sleep(1000);
 
             Assert.AreEqual("Update card info unexpected error", expectedException);
+        }
+
+        [Test]
+        public void AddPhoto()
+        {
+            _webDriver.FindElement(By.CssSelector("[class='link link_type_navigation']")).Click();
+            _constMethods.FindPhotoElement();
+
+            Thread.Sleep(3000);
+            var actualPhoto = _webDriver.FindElement(By.CssSelector("div.avatar__image"));
+
+            Assert.AreEqual(@"C:\Users\proho\Desktop\image_2021-04-29_14-00-03.png", actualPhoto);
         }
 
         [TearDown]
