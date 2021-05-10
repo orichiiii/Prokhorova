@@ -1,4 +1,6 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
+using System;
 
 namespace SeleniumTests
 {
@@ -26,9 +28,10 @@ namespace SeleniumTests
 
         public bool existsElement(By locator)
         {
+            var wait = new WebDriverWait(_webDriver, TimeSpan.FromSeconds(6));
             try
             {
-                _webDriver.FindElement(locator);
+                wait.Until(ExpectedConditions.ElementIsVisible(By.))
             }
             catch (NoSuchElementException)
             {

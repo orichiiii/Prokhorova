@@ -42,7 +42,7 @@ namespace SeleniumTests
             Thread.Sleep(3000);
 
             _updateProfile.GoToUpdateProfileLink()
-                .ClickGeneralChange()
+                .ClickSaveGeneralChanges()
                 .SetNewName("Liza")
                 .SetNewLastName("Olive")
                 .SetLocation("hhh")
@@ -55,71 +55,79 @@ namespace SeleniumTests
         }
 
         [Test]
-        [TestCase("Oly12345678$$")]
-        public void UpdatePassword(string password)
+        public void UpdatePassword()
         {
-            _webDriver.FindElement(By.XPath("//div[3]/div[1]/nb-account-info-password[1]/form[1]/div[1]/div[1]/nb-edit-switcher[1]/div[1]/div[1]")).Click();
-            var elements = _webDriver.FindElements(By.CssSelector("[type = password]"));
-            elements[0].SendKeys(Constant.password);
-            elements[1].SendKeys(password);
-            elements[2].SendKeys(password);
-            _webDriver.FindElement(By.CssSelector("[type = submit]")).Click();
+            _constMethods.RegistrationProcess(_phone, _email, Constant.password, Constant.name, Constant.lastName);
+            _updateProfile = new UpdateProfilePage(_webDriver);
             Thread.Sleep(3000);
-            _webDriver.FindElement(By.CssSelector("div.row.mt-4>div>nb-link>div")).Click();
-            Thread.Sleep(3000);
-            _webDriver.FindElement(By.CssSelector("[type=email]")).SendKeys(_email);
-            _webDriver.FindElement(By.CssSelector("input[name = password]")).SendKeys(password);
-            _webDriver.FindElement(By.CssSelector("[class^=SignInForm__submitButton]")).Click();
+
+            _updateProfile.GoToUpdateProfileLink()
+                .ClickPasswordChange()
+                .SetCurrentPassword(Constant.password)
+                .SetNewPasswordFirst("Aa12345678$$")
+                .SetNewPasswordSecond("Aa12345678$$")
+                .ClickSavePasswords()
+                .ClickLogOutButton();
+            var authorization = new AuthorizationPage(_webDriver);
+            authorization.SetEmail(_email)
+            .SetPassword("Aa12345678$$")
+            .ClickSubmitbutton();
 
             Thread.Sleep(3000);
             var actual = _webDriver.Url;
 
-            Assert.AreEqual(Constant.companyLink + "?goBackUrl=%2Fexplore", actual);
+            Assert.AreEqual(Constant.secondStepLink, actual);
         }
 
         [Test]
         public void UpdateEmail()
         {
+            _constMethods.RegistrationProcess(_phone, _email, Constant.password, Constant.name, Constant.lastName);
+            _updateProfile = new UpdateProfilePage(_webDriver);
+            Thread.Sleep(3000);
             var email = DateTime.Now.ToString("dd.yyyy.HH.mm.ss") + "@gmail.com";
 
-            _webDriver.FindElement(By.CssSelector("nb-account-info-email-address>form>div:nth-child(1)>div>nb-edit-switcher>div>div")).Click();
-            _webDriver.FindElement(By.CssSelector("[type = password]")).SendKeys("Aa@12345678");
-            _webDriver.FindElement(By.CssSelector("[type = text]")).SendKeys(email);
-            _webDriver.FindElement(By.CssSelector("[type = submit]")).Click();
+            _updateProfile.GoToUpdateProfileLink()
+                .ClickEmailChange()
+                .SetPasswordEmail(Constant.password)
+                .SetNewEmail(email)
+                .ClickSaveEmail();
 
-            Thread.Sleep(4000);
-            var newEmail = _webDriver.FindElement(By.CssSelector("div>div:nth-child(1)>span")).Text;
-
-            Assert.AreEqual(email, newEmail);
+            Assert.AreEqual(email, _updateProfile.GetNewEmail());
         }
 
         [Test]
         public void UpdatePhoneNumber()
         {
-            _webDriver.FindElement(By.CssSelector("nb-account-info-phone>div:nth-child(1)>div>nb-edit-switcher>div>div")).Click();
-            _webDriver.FindElement(By.CssSelector("[type = password]")).SendKeys("Aa@12345678");
-            _webDriver.FindElement(By.CssSelector("common-input-phone>label>input")).SendKeys("1111111111");
-            _webDriver.FindElement(By.CssSelector("common-button-deprecated:nth-child(5)>button")).Click();
+            _constMethods.RegistrationProcess(_phone, _email, Constant.password, Constant.name, Constant.lastName);
+            _updateProfile = new UpdateProfilePage(_webDriver);
+            Thread.Sleep(3000);
 
-            Thread.Sleep(4000);
-            var newPhone = _webDriver.FindElement(By.CssSelector("nb-paragraph.mt-2>div>span")).Text;
+            _updateProfile.GoToUpdateProfileLink()
+                .ClickPhoneChange()
+                .SetPhonePassword(Constant.password)
+                .SetNewPhone("1111111111")
+                .ClickSavePhone();
 
-            Assert.AreEqual("111.111.1111", newPhone);
+            Assert.AreEqual("111.111.1111", _updateProfile.GetNewPhone());
         }
 
         [Test]
         public void AddCard()
         {
-            _webDriver.FindElement(By.CssSelector("input[placeholder ='Full name']")).SendKeys("Marina Tropinkina");
-            _webDriver.FindElement(By.CssSelector("div.CardNumberField-input-wrapper input")).SendKeys("468397593739473");
-            _webDriver.FindElement(By.CssSelector("[name = exp-date]")).SendKeys("9999");
-            _webDriver.FindElement(By.CssSelector("[name = cvc]")).SendKeys("999");
-            _webDriver.FindElement(By.CssSelector("[type = submit]")).Click();
+            _constMethods.RegistrationProcess(_phone, _email, Constant.password, Constant.name, Constant.lastName);
+            _updateProfile = new UpdateProfilePage(_webDriver);
+            Thread.Sleep(3000);
 
-            var expectedException = _webDriver.FindElement(By.CssSelector("[class='header-notification__text ml-1']")).Text;
-            Thread.Sleep(1000);
+            _updateProfile.GoToUpdateProfileLink()
+                .SetFullNameToCardField(Constant.name + Constant.lastName)
+                .SetCardNumber("4111111111111111")
+                .SetCardExpDate("1025")
+                .SetCardCVC("493")
+                .ClickSaveCard();
+            //Thread.Sleep(500);
 
-            Assert.AreEqual("Update card info unexpected error", expectedException);
+            Assert.AreEqual("Update card info unexpected error", _updateProfile.GetExceprionCardInfoError());
         }
 
         [Test]
