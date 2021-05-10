@@ -30,6 +30,7 @@ namespace SeleniumTests
         private static By _pacMatchedField = By.CssSelector("[class=pac-matched]");
         private static By _signupCompanyFormButton = By.CssSelector("[class^=SignupCompanyForm__submitButton]");
         private static By _ExceptionMessageForNullLastName = By.XPath("//*[contains(@name,'last_name')]/../div[contains(@class,'FormErrorText')]");
+        private static By _ExceptionMessageForNullName = By.XPath("//*[contains(@name,'name')]/../div[contains(@class,'FormErrorText')]");
         private static By _ExceptionMessageForNullEmail = By.XPath("//*[contains(@name,'email')]/../div[contains(@class,'FormErrorText')]");
         private static By _ExceptionMessageForInvalidPassword = By.XPath("//*[contains(@name,'password')]/../div[contains(@class,'FormErrorText')]");
         private static By _ExceptionMessageForInvalidPhoneNumber = By.XPath("//*[contains(@name,'phone_number')]/../div[contains(@class,'FormErrorText')]");
@@ -41,13 +42,13 @@ namespace SeleniumTests
 
         public RegistrationPage GoToRegistrationPage()
         {
-            _webDriver.Navigate().GoToUrl("https://newbookmodels.com/join");
+            _webDriver.Navigate().GoToUrl(Constant.registrationLink);
             return this;
         }
 
         public RegistrationPage GoToNextRegistrationInPage()
         {
-            _webDriver.Navigate().GoToUrl("https://newbookmodels.com/join/company");
+            _webDriver.Navigate().GoToUrl(Constant.companyLink);
             return this;
         }
 
@@ -121,6 +122,9 @@ namespace SeleniumTests
            _webDriver.FindElement(_signupCompanyFormButton).Click();
 
         public string GetExceptionMessageRequiredLastName() =>
+            _webDriver.FindElement(_ExceptionMessageForNullLastName).Text;
+
+        public string GetExceptionMessageRequiredName() =>
             _webDriver.FindElement(_ExceptionMessageForNullLastName).Text;
 
         public string GetExceptionMessageRequiredEmail() =>

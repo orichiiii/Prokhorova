@@ -13,10 +13,10 @@ namespace LoginTests
     public class Registration
     {
         private IWebDriver _webDriver;
-        private Random random;
         private WebDriverHelper _webDriverHelper;
-        private string email;
-        private string phone;
+        private ConstMethods _constMethods;
+        private string _email;
+        private string _phone;
 
 
         [SetUp]
@@ -24,48 +24,37 @@ namespace LoginTests
         {
             _webDriverHelper = new WebDriverHelper();
             _webDriver = _webDriverHelper.GetWebDriver();
-            _webDriver.Navigate().GoToUrl("https://newbookmodels.com/join");
+            _constMethods = new ConstMethods(_webDriver);
+            _webDriver.Navigate().GoToUrl(Constant.registrationLink);
 
-            email = Parameters.GenerateEmail();
-            phone = Parameters.GeneratePhone();
+            _email = Parameters.GenerateEmail();
+            _phone = Parameters.GeneratePhone();
         }
 
         [Test]
         public void PositiveRegistration()
         {
-            var registration = new RegistrationPage(_webDriver);
+            _constMethods.RegistrationProcess(_phone, _email, Constant.password, Constant.name, Constant.lastName);
 
-            registration.GoToRegistrationPage()
-                .SetFirstName(Constant.name)
-                .SetLastName(Constant.lastName)
-                .SetEmail(email)
-                .SetPassword(Constant.password)
-                .SetPasswordConfirm(Constant.password)
-                .SetPhoneNumber(phone)
-                .ClickNextButton();
-
-            Thread.Sleep(5000);
+            Thread.Sleep(3000);
             var actualResult = _webDriver.Url;
             Assert.AreEqual("https://newbookmodels.com/join/company", actualResult);
         }
 
         [Test]
-        public void NegativeRegistration()
+        [TestCase("2334", "aaaaa@", "12345", "", "")]
+        public void NegativeRegistration(string phone, string email, string password, string name, string lastName)
         {
-            var registration = new RegistrationPage(_webDriver);
+            var registrationPage = new RegistrationPage(_webDriver);
 
-            registration.GoToRegistrationPage()
-                .SetFirstName(Constant.name)
-                .SetLastName(Constant.lastName)
-                .SetEmail(email)
-                .SetPassword(Constant.password)
-                .SetPasswordConfirm(Constant.password)
-                .SetPhoneNumber(phone)
-                .ClickNextButton();
+            _constMethods.RegistrationProcess(phone, email, password, name, lastName);
+            Thread.Sleep(3000);
 
-            Thread.Sleep(5000);
-            var actualResult = _webDriver.Url;
-            Assert.AreEqual("https://newbookmodels.com/join/company", actualResult);
+            Assert.AreEqual("Required", registrationPage.GetExceptionMessageRequiredLastName());
+            Assert.AreEqual("Required", registrationPage.GetExceptionMessageRequiredName());
+            Assert.AreEqual("Invalid Email", registrationPage.GetExceptionMessageRequiredEmail());
+            Assert.AreEqual("Invalid password format", registrationPage.GetExceptionMessageInvalidPassword());
+            Assert.AreEqual("Invalid phone format", registrationPage.GetExceptionMessageInvalidPhoneFormat());
         }
 
         [TearDown]

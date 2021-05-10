@@ -13,40 +13,34 @@ namespace TestProject
     class AutorizationTests
     {
         private IWebDriver _webDriver;
-        private Random random;
-        private int randomPhoneFirst;
-        private int randomPhoneSecond;
-        private int randomPh;
-        private string email;
-        private string phone;
+        private WebDriverHelper _webDriverHelper;
+        private ConstMethods _constMethods;
+        private string _email;
+        private string _phone;
 
         [SetUp]
         public void Setup()
         {
-            new DriverManager().SetUpDriver(new ChromeConfig(), VersionResolveStrategy.MatchingBrowser);
-            _webDriver = new ChromeDriver();
-            _webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(7);
-            _webDriver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(60);
-            _webDriver.Navigate().GoToUrl("https://newbookmodels.com/auth/signin");
+            _webDriverHelper = new WebDriverHelper();
+            _webDriver = _webDriverHelper.GetWebDriver();
+            _constMethods = new ConstMethods(_webDriver);
+            _webDriver.Navigate().GoToUrl(Constant.registrationLink);
 
-            var authorization = new AuthorizationPage(_webDriver);
-
-            //authorization.GoToRegistrationPage()
-            //    .SetFirstName("Carolina")
-            //    .SetLastName("Doul")
-            //    .SetEmail($"{email}@gmail.com")
-            //    .SetPassword("Aa@12345678")
-            //    .SetPasswordConfirm("Aa@12345678")
-            //    .SetPhoneNumber($"{phone}")
-            //    .ClickNextButton();
+            _email = Parameters.GenerateEmail();
+            _phone = Parameters.GeneratePhone();
         }
 
         [Test]
         public void AuthorizationWithValidData()
         {
-            
+            _constMethods.RegistrationProcess(_phone, _email, Constant.password, Constant.name, Constant.lastName);
+            var authorization = new AuthorizationPage(_webDriver);
+            authorization.GoToAuthorizationPage()
+            .SetEmail(_email)
+            .SetPassword(Constant.password)
+            .ClickSubmitbutton();
 
-            Thread.Sleep(20000);
+            Thread.Sleep(3000);
             var actual = _webDriver.Url;
 
             Assert.That(actual == "https://newbookmodels.com/join/company?goBackUrl=%2Fexplore");

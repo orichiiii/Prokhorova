@@ -10,8 +10,8 @@ namespace SeleniumTests
         public static readonly string name = "Marina";
         public static readonly string lastName = "Tropinkina";
         public static readonly string domain = "https://newbookmodels.com/";
-        public static readonly string loginLink = "Aa@12345678";
-        public static readonly string companyLink = "Aa@12345678";
+        public static readonly string registrationLink = $"{domain}join";
+        public static readonly string companyLink = $"{domain}company";
         public static readonly string signInLink = "Aa@12345678";
         public static readonly string updateProfileLink = "Aa@12345678";
     }

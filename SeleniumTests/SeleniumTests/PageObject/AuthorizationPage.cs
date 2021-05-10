@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SeleniumTests
 {
-    class AuthorizationPage
+    public class AuthorizationPage
     {
         private readonly IWebDriver _webDriver;
 
@@ -19,6 +19,30 @@ namespace SeleniumTests
         public AuthorizationPage(IWebDriver webDriver)
         {
             _webDriver = webDriver;
+        }
+
+        public AuthorizationPage GoToAuthorizationPage()
+        {
+            _webDriver.Navigate().GoToUrl("");
+            return this;
+        }
+
+        public AuthorizationPage SetEmail(string email)
+        {
+            _webDriver.FindElement(_emailField).SendKeys(email);
+            return this;
+        }
+
+        public AuthorizationPage SetPassword(string password)
+        {
+            _webDriver.FindElement(_passwordField).SendKeys(password);
+            return this;
+        }
+
+        public AuthorizationPage ClickSubmitbutton()
+        {
+            _webDriver.FindElement(_logInButton).Click();
+            return this;
         }
     }
 }
