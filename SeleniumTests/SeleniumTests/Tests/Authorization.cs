@@ -31,14 +31,14 @@ namespace TestProject
 
             var authorization = new AuthorizationPage(_webDriver);
 
-            authorization.GoToRegistrationPage()
-                .SetFirstName("Carolina")
-                .SetLastName("Doul")
-                .SetEmail($"{email}@gmail.com")
-                .SetPassword("Aa@12345678")
-                .SetPasswordConfirm("Aa@12345678")
-                .SetPhoneNumber($"{phone}")
-                .ClickNextButton();
+            //authorization.GoToRegistrationPage()
+            //    .SetFirstName("Carolina")
+            //    .SetLastName("Doul")
+            //    .SetEmail($"{email}@gmail.com")
+            //    .SetPassword("Aa@12345678")
+            //    .SetPasswordConfirm("Aa@12345678")
+            //    .SetPhoneNumber($"{phone}")
+            //    .ClickNextButton();
         }
 
         [Test]
