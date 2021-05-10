@@ -133,13 +133,16 @@ namespace SeleniumTests
         [Test]
         public void AddPhoto()
         {
-            _webDriver.FindElement(By.CssSelector("[class='link link_type_navigation']")).Click();
+            _constMethods.RegistrationProcess(_phone, _email, Constant.password, Constant.name, Constant.lastName);
+            _updateProfile = new UpdateProfilePage(_webDriver);
+            Thread.Sleep(3000);
+            _updateProfile.GoToUpdateProfileLink();
+            _updateProfile.ClickProfileChanges();
             _constMethods.FindPhotoElement();
 
             Thread.Sleep(3000);
-            var actualPhoto = _webDriver.FindElement(By.CssSelector("div.avatar__image"));
 
-            Assert.AreEqual(@"C:\Users\proho\Desktop\image_2021-04-29_14-00-03.png", actualPhoto);
+            Assert.AreEqual(true, _constMethods.existsElement());
         }
 
         [TearDown]

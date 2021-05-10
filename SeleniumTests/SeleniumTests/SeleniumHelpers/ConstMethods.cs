@@ -26,18 +26,16 @@ namespace SeleniumTests
             input.SendKeys(@"C:\Users\proho\Desktop\image_2021-04-29_14-00-03.png");
         }
 
-        public bool existsElement(By locator)
+        public bool existsElement()
         {
-            var wait = new WebDriverWait(_webDriver, TimeSpan.FromSeconds(6));
-            try
-            {
-                wait.Until(ExpectedConditions.ElementIsVisible(By.))
-            }
-            catch (NoSuchElementException)
-            {
-                return false;
-            }
-            return true;
+            var result = ((IJavaScriptExecutor)_webDriver).ExecuteScript(
+            "return arguments[0].complete && " +
+            "typeof arguments[0].naturalWidth != \"undefined\" && " +
+            "arguments[0].naturalWidth > 0", @"C:\Users\proho\Desktop\image_2021-04-29_14-00-03.png");
+
+            bool loaded = false;
+            loaded = (bool)result;
+            return loaded;
         }
 
         public void RegistrationProcess(string phone, string email, string password, string name, string lastName)
