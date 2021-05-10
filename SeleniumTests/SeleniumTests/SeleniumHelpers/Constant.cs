@@ -12,7 +12,7 @@ namespace SeleniumTests
         public static readonly string domain = "https://newbookmodels.com/";
         public static readonly string registrationLink = $"{domain}join";
         public static readonly string companyLink = $"{domain}company";
-        public static readonly string signInLink = "Aa@12345678";
-        public static readonly string updateProfileLink = "Aa@12345678";
+        public static readonly string signInLink = $"{domain}join/company?goBackUrl=%2Fexplore";
+        public static readonly string updateProfileLink = $"{domain}account-settings/account-info/edit";
     }
 }

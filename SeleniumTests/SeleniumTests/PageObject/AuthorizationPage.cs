@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace SeleniumTests
 {
@@ -12,7 +13,7 @@ namespace SeleniumTests
         private static By _emailField = By.CssSelector("input[name=email]");
         private static By _passwordField = By.CssSelector("input[type=password]");
         private static By _logInButton = By.CssSelector("button[type=submit]");
-        private static By _exceptionInvalidPassword = By.XPath("//*[text()='Please enter a correct email and password.']");
+        private static By _exceptionInvalidData = By.XPath("//*[text()='Please enter a correct email and password.']");
         private static By _userIcon = By.CssSelector("[class^= AvatarClient__avatar]");
         private static By _logoutField = By.CssSelector("[class^= link_type_logout]");
 
@@ -23,7 +24,10 @@ namespace SeleniumTests
 
         public AuthorizationPage GoToAuthorizationPage()
         {
-            _webDriver.Navigate().GoToUrl("");
+
+            _webDriver.Navigate().GoToUrl(Constant.updateProfileLink);
+            Thread.Sleep(3000);
+            _webDriver.FindElement(_logoutField).Click();
             return this;
         }
 
@@ -44,5 +48,7 @@ namespace SeleniumTests
             _webDriver.FindElement(_logInButton).Click();
             return this;
         }
+
+        public string GetExceptionInvalidData() => _webDriver.FindElement(_exceptionInvalidData).Text;
     }
 }

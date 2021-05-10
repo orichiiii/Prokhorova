@@ -31,42 +31,40 @@ namespace TestProject
         }
 
         [Test]
-        public void AuthorizationWithValidData()
+        public void AuthorizationWith_ValidData()
         {
             _constMethods.RegistrationProcess(_phone, _email, Constant.password, Constant.name, Constant.lastName);
             var authorization = new AuthorizationPage(_webDriver);
+            Thread.Sleep(3000);
             authorization.GoToAuthorizationPage()
             .SetEmail(_email)
             .SetPassword(Constant.password)
             .ClickSubmitbutton();
 
             Thread.Sleep(3000);
-            var actual = _webDriver.Url;
+            var actualLink = _webDriver.Url;
 
-            Assert.That(actual == "https://newbookmodels.com/join/company?goBackUrl=%2Fexplore");
+            Assert.AreEqual(Constant.signInLink, actualLink);
         }
 
         [Test]
-        public void AuthorizationWithInValidData()
+        public void AuthorizationWith_InValidData()
         {
-            _webDriver.FindElement(By.CssSelector("[name = email]")).SendKeys("uijjthkc@emlpro.com");
-            _webDriver.FindElement(By.CssSelector("[name = password]")).SendKeys("Aa@12345678");
-            _webDriver.FindElement(By.CssSelector("[class^=SignInForm__submitButton]")).Click();
+            _constMethods.RegistrationProcess(_phone, _email, Constant.password, Constant.name, Constant.lastName);
+            var authorization = new AuthorizationPage(_webDriver);
+            Thread.Sleep(3000);
+            authorization.GoToAuthorizationPage()
+            .SetEmail(_email)
+            .SetPassword("1")
+            .ClickSubmitbutton();
 
-            Assert.That(existsElement("//*[text()='Please enter a correct email and password.']"));
+            Assert.AreEqual("Please enter a correct email and password.", authorization.GetExceptionInvalidData());
         }
 
-        private bool existsElement(String id)
+        [TearDown]
+        public void TearDown()
         {
-            try
-            {
-                _webDriver.FindElement(By.XPath(id));
-            }
-            catch (NoSuchElementException)
-            {
-                return false;
-            }
-            return true;
+            _webDriverHelper.CloseDriver();
         }
     }
 }
