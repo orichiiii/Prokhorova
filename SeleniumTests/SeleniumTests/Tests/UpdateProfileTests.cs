@@ -14,7 +14,7 @@ using SeleniumTests.PageObject;
 
 namespace SeleniumTests
 {
-    class UpdateProfileTests
+    public class UpdateProfileTests
     {
         private WebDriverHelper _webDriverHelper;
         private IWebDriver _webDriver;
@@ -125,7 +125,7 @@ namespace SeleniumTests
                 .SetCardExpDate("1025")
                 .SetCardCVC("493")
                 .ClickSaveCard();
-            //Thread.Sleep(500);
+            Thread.Sleep(500);
 
             Assert.AreEqual("Update card info unexpected error", _updateProfile.GetExceprionCardInfoError());
         }

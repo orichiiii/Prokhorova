@@ -35,20 +35,14 @@ namespace SeleniumTests.PageObject
         private static By _changePhone = By.CssSelector("common-input-phone>label>input");
         private static By _savePhoneButton = By.CssSelector("common-button-deprecated:nth-child(5)>button");
         private static By _newPhone = By.CssSelector("nb-paragraph.mt-2>div>span");
-
         private static By _addCardName = By.CssSelector("input[placeholder ='Full name']");
         private static By _addCardNumber = By.CssSelector("#root > form > div > div.CardField-input-wrapper.is-ready-to-slide > span.CardField-number.CardField-child > span:nth-child(2) > div > div.CardNumberField-input-wrapper > span > input");
         private static By _addCardDate = By.CssSelector("[name = exp-date]");
         private static By _addCardCVC = By.CssSelector("[name = cvc]");
         private static By _saveCard = By.CssSelector("[type = submit]");
         private static By _exceptionCardInfoError = By.CssSelector("[class^='header-notification__text']");
-
         private static By _profileChanges = By.CssSelector("[class='link link_type_navigation']");
         private static By _userIcon = By.CssSelector("div.avatar__image");
-        //private static By _addCardDate = By.CssSelector("[name = exp-date]");
-        //private static By _addCardCVC = By.CssSelector("[name = cvc]");
-        //private static By _saveCard = By.CssSelector("[type = submit]");
-        //private static By _exceptionCardInfoError = By.CssSelector("[class^='header-notification__text']");
 
         public UpdateProfilePage(IWebDriver webDriver)
         {

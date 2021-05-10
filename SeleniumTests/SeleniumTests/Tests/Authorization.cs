@@ -10,7 +10,7 @@ using WebDriverManager.Helpers;
 
 namespace TestProject
 {
-    class AutorizationTests
+    public class AutorizationTests
     {
         private IWebDriver _webDriver;
         private WebDriverHelper _webDriverHelper;
