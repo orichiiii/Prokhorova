@@ -14,28 +14,13 @@ namespace LoginTests
     {
         private IWebDriver _webDriver;
         private Random random;
-        private int randomPhoneFirst;
-        private int randomPhoneSecond;
-        private int randomPh;
-        private string email;
-        private string phone;
+        private WebDriverHelper _webDriverHelper;
 
 
         [SetUp]
         public void Setup()
         {
-            new DriverManager().SetUpDriver(new ChromeConfig(), VersionResolveStrategy.MatchingBrowser);
-            _webDriver = new ChromeDriver();
-            _webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(7);
-            _webDriver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(60);
-
-            random = new Random();
-
-            randomPhoneFirst = random.Next(100, 999);
-            randomPhoneSecond = random.Next(100, 999);
-            randomPh = random.Next(1000, 9999);
-
-            phone = $"{randomPhoneFirst}{randomPhoneSecond}{randomPh}";
+            _webDriverHelper.GetWebDriver();
 
             _webDriver.Navigate().GoToUrl("https://newbookmodels.com/join");
 
@@ -61,6 +46,12 @@ namespace LoginTests
             var actualResult = _webDriver.Url;
 
             Assert.AreEqual("https://newbookmodels.com/join/company", actualResult);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _webDriverHelper.CloseDriver();
         }
     }
 }
