@@ -6,6 +6,9 @@ namespace SeleniumTests
 {
     public class Parameters
     {
-        public string GeneratePhone() => 
+        private Random _random = new Random();
+
+        public string GeneratePhone() => _random.Next(100000000, int.MaxValue).ToString();
+        public string GenerateEmail() => DateTime.Now.ToString("HH, dd, mm, ss, yy") + "@gmail.com";
     }
 }

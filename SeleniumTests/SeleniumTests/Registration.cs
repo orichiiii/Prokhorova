@@ -21,10 +21,9 @@ namespace LoginTests
         public void Setup()
         {
             _webDriverHelper.GetWebDriver();
+            
 
             _webDriver.Navigate().GoToUrl("https://newbookmodels.com/join");
-
-            email = DateTime.Now.ToString("dd.yyyy.HH.mm.ss");
         }
 
         [Test]
