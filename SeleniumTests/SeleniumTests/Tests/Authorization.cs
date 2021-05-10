@@ -24,7 +24,6 @@ namespace TestProject
             _webDriverHelper = new WebDriverHelper();
             _webDriver = _webDriverHelper.GetWebDriver();
             _constMethods = new ConstMethods(_webDriver);
-            _webDriver.Navigate().GoToUrl(Constant.registrationLink);
 
             _email = Parameters.GenerateEmail();
             _phone = Parameters.GeneratePhone();
